@@ -23,19 +23,18 @@ class Perforate(object):
 
     def _with_redeclaration(self, **kwargs):
         def _(fn):
-            last_declared = datetime.now()
             def wrapped(*wargs, **wkwargs):
-                nonlocal last_declared
                 now = datetime.now()
-                if (now - last_declared).seconds > self._session_renewal_interval:
+                if (now - wrapped.last_declared).seconds > self._session_renewal_interval:
                     self._send_message(**kwargs)
-                    last_declared = now
+                    wrapped.last_declared = now
                 fn(*wargs, **wkwargs)
+            wrapped.last_declared = datetime.now() 
             return wrapped
         return _
 
     def _make_session_code(self, value):
-        h = zlib.crc32(bytes(value, 'ascii'))
+        h = zlib.crc32(value.encode('ascii'))
         while h in self._hashes_used:
             h = h + 1
         self._hashes_used.add(h)
