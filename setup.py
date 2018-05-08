@@ -7,5 +7,5 @@ setup(name='perforate',
       author_email='atereshkin@y-node.com',
       url='https://github.com/atereshkin/perforate-python',
       packages=['perforate'],
-      install_requires=['protobuf>=3.0.0']
+      install_requires=['protobuf>=3.0.0', 'pyzmq>=17.0.0']
      )
